@@ -1,0 +1,54 @@
+version: '2'
+
+
+services:
+
+  mongo-app:
+    container_name: mongo-app
+    image: mongo:latest
+    #volumes: 
+    #  - ./data:/data/db
+    ports:
+      - 27017:27017
+    stdin_open: true
+    tty: true
+    environment: 
+      - wiredTigerCacheSizeGB=1.5
+
+  react-dash:
+    container_name: react-dash-app
+    image: react-dash:dev
+    volumes:
+      - './app:/app'
+      - '/app/node_modules'
+    ports:
+      - 3000:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true
+    tty: true
+    depends_on:
+      - mongo-app
+
+
+
+  nb-python:
+    image: ac/python-garmin
+    container_name: python-app
+    ports:
+      - 8888:8888
+    volumes:
+      - ./python:/share
+    links: 
+      - mongo-app
+    depends_on:
+      - mongo-app
+  
+  load-activities:
+    image: load-activities
+    container_name: load-activities
+    links: 
+      - mongo-app
+    depends_on:
+      - mongo-app
+

@@ -1,0 +1,5 @@
+garminconnect
+datetime
+pandas
+pymongo
+configparser
