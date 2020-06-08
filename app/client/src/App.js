@@ -22,7 +22,7 @@ function App() {
     return (
       <li key={activity._id} className="list__item product">
         <h3 className="product__name">{activity.activityName}</h3>
-        <p className="product__description">{activity.distance}</p>
+        <p className="product__description">{activity.averageHR}</p>
       </li>
     );
   };
@@ -33,7 +33,7 @@ function App() {
         {(activities && activities.length > 0) ? (
           activities.map(product => renderProduct(product))
         ) : (
-          <p>No activity found</p>
+          <p>No activity found here</p>
         )}
       </ul>
     </div>

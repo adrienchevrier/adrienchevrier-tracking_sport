@@ -23,6 +23,7 @@ services:
       - '/app/node_modules'
     ports:
       - 3000:3000
+      - 5000:5000
     environment:
       - CHOKIDAR_USEPOLLING=true
     stdin_open: true
@@ -45,7 +46,7 @@ services:
       - mongo-app
   
   load-activities:
-    image: load-activities
+    image: ac/load-activities
     container_name: load-activities
     links: 
       - mongo-app

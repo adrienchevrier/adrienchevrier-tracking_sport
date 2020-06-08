@@ -8,7 +8,7 @@ require('./models/Garmin');
 const app = express();
 
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI || `mongodb://localhost:27017/raw_activities`);
+mongoose.connect(process.env.MONGODB_URI || `mongodb://mongo-app:27017/activities`);
 
 app.use(bodyParser.json());
 

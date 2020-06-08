@@ -20,7 +20,7 @@ Setup Mongo Connection
 """
 mongoclient = "mongodb://mongo-app:27017/"
 mongodb = "activities"
-mongocol = "activities_overview"
+mongocol = "general_activities"
 
 
 """
@@ -117,7 +117,7 @@ clean dataframe
 # select columns
 full_activities = df_act[['activityName','activityType','duration','averageHR','startTimeLocal']]
 # Get duration in minutes
-full_activities.loc[:, 'duration min'] = full_activities['duration']/60
+full_activities.loc[:, 'duration_min'] = full_activities['duration']/60
 # Get activity type
 full_activities['activityType'] = full_activities['activityType'].apply(
     lambda x : x['typeKey'])

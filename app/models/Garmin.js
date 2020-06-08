@@ -2,8 +2,16 @@ const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
 const productSchema = new Schema({
-    distance: Number,
     activityName: String,
+    activityType: String,
+    duration: Number,
+    averageHR: Number,
+    startTimeLocal: Number,
+    duration_min: Number,
+    week: String,
+    date: Number
+
+
 })
 
-mongoose.model('activities', productSchema);
+mongoose.model('general_activities', productSchema);

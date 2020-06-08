@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Garmin = mongoose.model('activities');
+const Garmin = mongoose.model('general_activities');
 
 module.exports = (app) => {
 
