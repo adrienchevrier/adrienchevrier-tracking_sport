@@ -17,7 +17,7 @@ services:
 
   react-dash:
     container_name: react-dash-app
-    image: react-dash:dev
+    image: ac/react-dash:dev
     volumes:
       - './app:/app'
       - '/app/node_modules'

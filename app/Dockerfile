@@ -18,6 +18,7 @@ RUN npm install --save fusionmaps
 RUN npm install --save react-fusioncharts
 RUN npm install --save express body-parser mongoose
 RUN npm install --save-dev nodemon concurrently
+RUN npm install --save d3
 # add app
 COPY . ./
 
