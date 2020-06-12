@@ -9,6 +9,11 @@ module.exports = (app) => {
   });
 
   app.post(`/api/garmin`, async (req, res) => {
+    // Garmin.find(function(err, activities){
+    //   if(err){
+    //       res.send(err);
+    //   }
+    //   res.json(activities);
     let garmin = await Garmin.create(req.body);
     return res.status(201).send({
       error: false,

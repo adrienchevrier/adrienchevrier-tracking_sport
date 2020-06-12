@@ -13,12 +13,14 @@ COPY package-lock.json ./
 RUN npm install --silent
 RUN npm install react-scripts@3.4.1 -g --silent
 RUN npm install --save bootstrap
-RUN npm install --save fusioncharts
-RUN npm install --save fusionmaps
-RUN npm install --save react-fusioncharts
+# RUN npm install --save fusioncharts
+# RUN npm install --save fusionmaps
+# RUN npm install --save react-fusioncharts
 RUN npm install --save express body-parser mongoose
 RUN npm install --save-dev nodemon concurrently
 RUN npm install --save d3
+RUN npm install --save antd
+
 # add app
 COPY . ./
 

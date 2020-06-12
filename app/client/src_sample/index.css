@@ -30,7 +30,7 @@ code {
   font-family: "basefont-bold";
   src: local("basefont-bold"),
     url("./assets/fonts/circular/CircularStd-Bold.otf") format("opentype");
-} */
+} 
 
 /* typography styles */
 .is-dark-text {
@@ -134,6 +134,8 @@ body {
   flex-direction: column;
   padding: 1.5rem;
   height: calc(100%);
+  background-color: cornsilk;
+  opacity: 90%;
 }
 
 .chart-card {
