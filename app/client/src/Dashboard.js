@@ -96,7 +96,7 @@ export default class Dashboard extends Component {
                         </Content>
                         <Layout style={{ height: 600 }}>
                             <Content>
-                                <View5 data={filteredData}/>
+                                <View5 data={activities}/>
                             </Content>
                             <Sider width={300} style={{backgroundColor:'#eee'}}>
                                 {/* <View6 data={filteredData} changeSelectUser={this.changeSelectUser}/> */}

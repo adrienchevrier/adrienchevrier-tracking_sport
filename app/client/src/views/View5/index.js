@@ -7,7 +7,7 @@ export default class View5 extends Component {
         const {data} = this.props;
         return (
             <div id='view5' className='pane'>
-                <div className='header'>Age</div>
+                <div className='header'>Minutes of activity per week</div>
                 <div style={{ overflowX: 'scroll',overflowY:'hidden' }}>
                 <BarChart data={data} width={1000} height={550}/>
                 </div>                

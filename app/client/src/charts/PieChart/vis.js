@@ -28,9 +28,6 @@ var data = d3.nest()
 .key(function(d) { return d.activityType; })
 .rollup(function(v) { return v.length; })
 .object(props.data);
-console.log("piechart");
-console.log(data);
-console.log(data_sample);
 
 // set the color scale
 var color = d3.scaleOrdinal()
@@ -48,24 +45,32 @@ var arcGenerator = d3.arc()
   .outerRadius(radius)
 
 // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
-svg
+var u = svg
   .selectAll('whatever')
   .data(data_ready)
+
+u
   .enter()
   .append('path')
+  .merge(u)
+  .transition()
+  .duration(1000)
   .attr('d', d3.arc()
     .innerRadius(0)
     .outerRadius(radius)
   )
   .attr('fill', function(d){ return(color(d.data.key)) })
-  .attr("stroke", "black")
+  .attr("stroke", "white")
   .style("stroke-width", "2px")
   .style("opacity", 0.7)
 
+
 // Now add the annotation. Use the centroid method to get the best coordinates
-svg
+var w = svg
   .selectAll('whatever')
   .data(data_ready)
+
+w
   .enter()
   .append('text')
   .text(function(d){ return d.data.key})
@@ -73,11 +78,14 @@ svg
   .style("text-anchor", "middle")
   .style("font-size", 17)
 
+u.exit()
+ .remove()
+
+ w.exit()
+  .remove()
+
 
 }
-
-
-
 
 
 
