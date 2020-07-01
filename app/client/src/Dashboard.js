@@ -96,11 +96,13 @@ export default class Dashboard extends Component {
                         </Content>
                         <Layout style={{ height: 600 }}>
                             <Content>
-                                <View5 data={activities}/>
+                                <View5 
+                                    data={activities} 
+                                />
                             </Content>
                             <Sider width={300} style={{backgroundColor:'#eee'}}>
-                                {/* <View6 data={filteredData} changeSelectUser={this.changeSelectUser}/> */}
-                                <div className="App">
+                                <View6 data={activities}/>
+                                {/* <div className="App">
                                   <ul className="list">
                                     {(activities && activities.length > 0) ? (
                                       activities.map(product => renderProduct(product))
@@ -108,7 +110,7 @@ export default class Dashboard extends Component {
                                       <p>No activity found here</p>
                                     )}
                                   </ul>
-                                </div>
+                                </div> */}
 
                             </Sider>
                         </Layout>
