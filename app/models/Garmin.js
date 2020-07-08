@@ -10,7 +10,7 @@ const productSchema = new Schema({
     startTimeLocal: Number,
     duration_min: Number,
     week: String,
-    date: Number
+    date: String
 
 
 })
