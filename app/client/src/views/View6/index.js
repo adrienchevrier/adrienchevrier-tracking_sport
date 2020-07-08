@@ -45,9 +45,9 @@ export default class View6 extends Component {
         const renderProduct = activity => {
             // console.log(activity);
             return (
-              <li key={activity._id} className="list__item product">
-                <h3 className="product__name">{activity.activityName}</h3>
-                <h4 className="product__name">{activity.highlight}</h4>
+              <li key={activity._id} className="list__item product" style={{margin: 10 }}>
+                <h3 className="product__name" style={{"fontWeight":"bold"}}>{activity.activityName}</h3>
+                <h4 className="product__name" style={{"fontSize":16}}>{activity.highlight}</h4>
                 <p className="product__description">average heartrate {activity.averageHR}</p>
                 <p className="product__description">duration {timeConvert(activity.duration_min)}</p>
                 <p className="product__description">distance {new Intl.NumberFormat().format(activity.distance)}m</p>

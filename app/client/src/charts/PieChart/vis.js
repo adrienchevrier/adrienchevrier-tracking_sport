@@ -5,7 +5,7 @@ const draw = (props) => {
 
 // set the dimensions and margins of the graph
 d3.select('.vis-piechart > *').remove();
-const margin = { top: 10, right: 20, bottom: 30, left: 40 };
+const margin = { top: 5, right: 5, bottom: 5, left: 5 };
 const width = props.width - margin.left - margin.right;
 const height = props.height - margin.top - margin.bottom;
 
@@ -19,8 +19,8 @@ const t = d3.transition()
 // append the svg object to the div called 'my_dataviz'
 var svg = d3.select('.vis-piechart')
   .append("svg")
-    .attr("width", width)
-    .attr("height", height)
+    .attr("width", width+60)
+    .attr("height", height+60)
   .append("g")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
@@ -43,12 +43,12 @@ var data_ready = pie(d3.entries(data));
 
 // shape helper to build arcs:
 var arcGenerator = d3.arc()
-  .innerRadius(0)
+  .innerRadius(90)
   .outerRadius(radius);
   
-var arc = d3.arc()
-  .outerRadius(radius * 1.0)
-  .innerRadius(radius * 0.0);
+var arcGeneratorCount = d3.arc()
+.innerRadius(0)
+.outerRadius(radius);
 
 // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
 var u = svg
@@ -60,7 +60,6 @@ u
   .enter()
   .append('path')
   .merge(u)
-  .transition().duration(500)
   .attr('d', d3.arc()
     .innerRadius(0)
     .outerRadius(radius)
@@ -69,6 +68,9 @@ u
   .attr("stroke", "white")
   .style("stroke-width", "2px")
   .style("opacity", 0.7);
+
+  u.transition().duration(500);
+
 
   //foreground.transition(t).attrTween("d",arcTween(data_ready))
 
@@ -84,15 +86,36 @@ w
   .append('text')
   .text(function(d){ return d.data.key})
   .transition(t)
+  .attr("transform", function(d) { return "translate(" + arcGeneratorCount.centroid(d) + ")";  })
+  .style("text-anchor", "middle")
+  .style("font-size", 17)
+  .style("font-weight", "bold")
+
+  var m = svg
+  .selectAll('whatever')
+  .data(data_ready)
+
+m
+  .enter()
+  .append('text')
+  .text(function(d){ return d.data.value})
+  .transition(t)
   .attr("transform", function(d) { return "translate(" + arcGenerator.centroid(d) + ")";  })
   .style("text-anchor", "middle")
   .style("font-size", 17)
+  .style("font-weight", "bold")
+  .style("color", "white")
 
 u.exit()
  .remove()
 
  w.exit()
   .remove()
+
+  m.exit()
+  .remove()
+
+
 
 
 }

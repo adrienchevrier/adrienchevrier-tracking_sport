@@ -11,7 +11,7 @@ const draw = (props) => {
     d3.select('.vis-linechart > *').remove();
     let keys = [...new Set(data.map(({activityType})=>activityType))];
     let margin = { top: 20, right: 20, bottom: 30, left: 40 }
-    const width = props.width - margin.left - margin.right;;
+    const width = props.width - margin.left - margin.right;
     const height = props.height - margin.top - margin.bottom;
     var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     let svg = d3.select(".vis-linechart")
@@ -25,7 +25,7 @@ const draw = (props) => {
     data.forEach(function (d) {
         d.week = Number(d.week);
         d.date = new Date(d.date)    });
-    console.log(data);
+    
     
     // Add X axis --> it is a date format
     let x = d3.scaleTime()
@@ -135,8 +135,11 @@ const draw = (props) => {
                     
                       tooltip.attr("transform", `translate(${x(d.date)},${y(d.averageHR)})`)
                       .call(popover, `${d.activityName}
-            ${d.averageHR}
+                  Avg heartrate${d.averageHR}
+                  duration ${timeConvert(d.duration_min)}
+                  distance ${new Intl.NumberFormat().format(d.distance)}
                   ${d.date.toLocaleDateString("en-US", options)}`);
+
             svg.selectAll(".dots").attr("stroke", "#ddd");
             svg.append("circle")
                 .attr("class", "temp")
@@ -164,6 +167,16 @@ const draw = (props) => {
               svg.selectAll(".temp").remove();
               });
             return svg
+
+
+            function timeConvert(n) {
+              var num = n;
+              var hours = (num / 60);
+              var rhours = Math.floor(hours);
+              var minutes = (hours - rhours) * 60;
+              var rminutes = Math.round(minutes);
+              return rhours + " hour(s) " + rminutes + " minute(s).";
+              }
 
 }
 

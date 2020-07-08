@@ -2,3 +2,21 @@
     height: 600px;
     /* background-color: blueviolet; */
 }
+
+.product{
+    background-color:  #d8d8d8;
+    list-style-type:None;
+    border-radius: 3px;
+    padding:5px;
+    line-height:22px;
+}
+
+.list{
+    padding-left: 0;
+}
+.product__description{
+    margin-bottom: 0;
+}
+.h3{
+    font-weight:bold;
+}

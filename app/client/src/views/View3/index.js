@@ -18,7 +18,10 @@ export default class View3 extends Component {
             indeterminate: true,
             checkAll: false,
         };
+
+
     }
+    
 
     onChangeCheckbox = checkedList => {
         this.setState({
@@ -44,6 +47,11 @@ export default class View3 extends Component {
     }
 
     render() {
+
+        const {data} = this.props.activities;        
+        const weeks = this.props.activities.map(function(d) { return Number(d.week); });
+        console.log(Math.max(...weeks));
+
         let keys =[...new Set(this.props.activities.map(({activityType})=>activityType))];
         plainOptions = [...new Set(this.props.activities.map(({activityType})=>activityType))];
         defaultCheckedList= plainOptions;
@@ -72,7 +80,7 @@ export default class View3 extends Component {
                 </div>
                 <Divider />
                 <h3>Week</h3>
-                <Slider defaultValue={0} onChange={this.onChangeSilder}/>
+                <Slider defaultValue={0} max={Math.max(...weeks)} onChange={this.onChangeSilder}/>
             </div>
         )
     }

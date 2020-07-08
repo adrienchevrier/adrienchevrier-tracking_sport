@@ -16,7 +16,7 @@ const draw = (props) => {
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     const t = d3.transition()
-            .duration(400);
+            .duration(300);
     // console.log('data raw');
     // console.log(props);
     let keys = [...new Set(data.map(({activityType})=>activityType))];
@@ -31,6 +31,7 @@ const draw = (props) => {
             if (typeof e == "undefined") {
                 d[e] = 0;
         }});
+        d.date = new Date(d.date);
     });
     
     let data_clean = d3.nest()
@@ -67,7 +68,15 @@ const draw = (props) => {
         
       });
 
-    
+   
+      function timeConvert(n) {
+        var num = n;
+        var hours = (num / 60);
+        var rhours = Math.floor(hours);
+        var minutes = (hours - rhours) * 60;
+        var rminutes = Math.round(minutes);
+        return rhours + " hour(s) " + rminutes + " minute(s).";
+        } 
 
     // console.log('data array');
     // console.log(data_array)
@@ -79,13 +88,19 @@ const draw = (props) => {
     var  stack = d3.stack()
     .keys(keys)
     let series = stack(data_array).map(d => (d.forEach(v => v.key = d.key), d));
+    
     // Scale the range of the data in the domains
     var x = d3.scaleBand()
       .domain(weeks)
       .range([0, width])
       .padding([0.2])
+
+    var xTime = d3.scaleTime()
+      .domain(d3.extent(data, d => d.date)).nice()
+      .range([margin.left, width - margin.right]);
+      
     let y = d3.scaleLinear()
-          .range([height, 0]).nice();
+          .range([height, 0]);
 
 
     var z = d3.scaleOrdinal()
@@ -96,36 +111,56 @@ const draw = (props) => {
     z.domain(keys);
 
     // append the rectangles for the bar chart
-    const rect = svg.selectAll("g")
+
+
+    let rect = svg.selectAll("g")
 
         .data(series)
         .join("g")
-            .attr("fill", function(d) { return z(d.key); })
         .selectAll("rect")
         .data(function(d) {return d;})
         .enter().append("rect")
-        .attr("class", "bar")
-        .transition(t)
-        .delay((d, i) => i * 20)
-        .attr("x", function(d,i) { return x(d.data.week); })
+        .attr("fill", "white")
+        .attr("class", "bar");
+
+    rect.attr("x", function(d,i) { return x(d.data.week); })
         .attr("width", x.bandwidth())
-        .transition(t)
-        .attr("y", function(d) { return y(d[1]); })
-        .transition(t)
-        .attr("height", function(d) { return y(d[0]) - y(d[1]); });
-        // .on("mouseover", function() { tooltip.style("display", null); })
-        // .on("mouseout", function() { tooltip.style("display", "none"); })
-        // .on("mousemove", function(d) {
-        // //   console.log(d);
-        //   var xPosition = d3.mouse(this)[0] - 5;
-        //   var yPosition = d3.mouse(this)[1] - 5;
-        //   tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
-        //   tooltip.select("text").text(d[1]-d[0]);
-        // });
+        .attr("y", function(d) { return y(d[0]); })
+        .attr("height", function(d) { return y(d[0]); });
+
+
+
+    rect.transition(t)
+      .attr("fill", function(d) { return z(d.key); })
+      .attr("x", function(d,i) { return x(d.data.week); })
+      .attr("width", x.bandwidth())
+      .attr("y", function(d) { return y(d[1]); })
+      .delay((d, i) => i * 20)
+      .attr("height", function(d) { return y(d[0]) - y(d[1]); });
+        
+      rect.on("mouseover", function() { tooltip.style("display", null);
+    });
+
+      rect.on("mouseout", function() { 
+        tooltip.style("display", "none"); 
+      });
+
+      rect.on("mousemove", function(d) {
+          var xPosition = d3.mouse(this)[0] - 15;
+          var yPosition = d3.mouse(this)[1] - 65;
+          tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")")
+                      .call(popover, `${d.key}
+            Hours spent ${timeConvert(d[1]-d[0])}
+            Total hours ${timeConvert(d.data.total)}
+            Week ${d.data.week}
+            `);
+
+          
+        })
     // add the x Axis
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x).tickSizeOuter(0))
+        .call(d3.axisBottom(xTime).tickSizeOuter(0))
         .call(g => g.selectAll(".domain").remove());
 
     // add the y Axis
@@ -154,24 +189,57 @@ const draw = (props) => {
         .attr("dy", "0.32em")
         .text(function(d) { return d; });
       // Prep the tooltip bits, initial display is hidden
-    var tooltip = svg.append("g")
-  .attr("class", "tooltip")
-  .style("display", "none");
-    
-    tooltip.append("rect")
-  .attr("width", 60)
-  .attr("height", 20)
-  .attr("fill", "white")
-  .style("opacity", 0.5);
 
-    tooltip.append("text")
-  .attr("x", 30)
-  .attr("dy", "1.2em")
-  .style("text-anchor", "middle")
-  .attr("font-size", "12px")
-  .attr("font-weight", "bold");
+
+      const tooltip = svg.append("g");
+
+      let popover = (g, value) => {
+                  if (!value) return g.style("display", "none");
+                
+                  // tooltip group
+                  g
+                    .style("display", null)
+                    .style("pointer-events", "none")
+                    .style("font", "10px sans-serif");
+                
+                  // tooltip container stroke
+                  const path = g.selectAll("path")
+                    .data([null])
+                    .join("path")
+                      .attr("fill", "white")
+                      .attr("stroke", "black")
+                      .attr("opacity",0.9);
+                
+                  // tooltip content
+                  const text = g.selectAll("text")
+                    .data([null])
+                    .join("text")
+                    .call(text => text
+                      .selectAll("tspan")
+                      .data((value + "").split(/\n/))
+                      .join("tspan")
+                        .attr("x", 0)
+                        .attr("y", (d, i) => `${i * 1.1}em`)
+                        .style("text-align", "center")
+                        .style("font-weight", (_, i) => i ? null : "bold")
+                        .text(d => d));
+                
+                  // tooltip positioning
+                  const {x, y, width: w, height: h} = text.node().getBBox();
+                  text.attr("transform", `translate(${-w / 2},${15 - y})`);
+                  
+                  // tooltip container path
+                  path.attr("d", `M${-w / 2 - 10},5H${w / 2 + 10}v${h + 20}h-${w + 20}z`);
+                }
+
+  rect.exit()
+  .remove()
+
 
 
 }
+
+
+
 
 export default draw;
