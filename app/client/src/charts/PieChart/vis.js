@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { arc } from 'd3';
 
 const draw = (props) => {
 
@@ -10,9 +11,10 @@ const height = props.height - margin.top - margin.bottom;
 
 // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
 let radius = Math.min(width, height) / 2;
+const t = d3.transition()
+            .duration(400);
 
 
-    
 
 // append the svg object to the div called 'my_dataviz'
 var svg = d3.select('.vis-piechart')
@@ -32,29 +34,33 @@ var data = d3.nest()
 // set the color scale
 var color = d3.scaleOrdinal()
   .domain(data)
-  .range(d3.schemeDark2)
+  .range(d3.schemeRdBu[4])
 
 // Compute the position of each group on the pie:
 var pie = d3.pie()
-  .value(function(d) {return d.value; })
-var data_ready = pie(d3.entries(data))
+  .value(function(d) {return d.value; });
+var data_ready = pie(d3.entries(data));
 
 // shape helper to build arcs:
 var arcGenerator = d3.arc()
   .innerRadius(0)
-  .outerRadius(radius)
+  .outerRadius(radius);
+  
+var arc = d3.arc()
+  .outerRadius(radius * 1.0)
+  .innerRadius(radius * 0.0);
 
 // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
 var u = svg
   .selectAll('whatever')
   .data(data_ready)
 
+
 u
   .enter()
   .append('path')
   .merge(u)
-  .transition()
-  .duration(1000)
+  .transition().duration(500)
   .attr('d', d3.arc()
     .innerRadius(0)
     .outerRadius(radius)
@@ -62,8 +68,11 @@ u
   .attr('fill', function(d){ return(color(d.data.key)) })
   .attr("stroke", "white")
   .style("stroke-width", "2px")
-  .style("opacity", 0.7)
+  .style("opacity", 0.7);
 
+  //foreground.transition(t).attrTween("d",arcTween(data_ready))
+
+  
 
 // Now add the annotation. Use the centroid method to get the best coordinates
 var w = svg
@@ -74,6 +83,7 @@ w
   .enter()
   .append('text')
   .text(function(d){ return d.data.key})
+  .transition(t)
   .attr("transform", function(d) { return "translate(" + arcGenerator.centroid(d) + ")";  })
   .style("text-anchor", "middle")
   .style("font-size", 17)

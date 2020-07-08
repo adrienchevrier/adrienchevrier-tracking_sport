@@ -18,8 +18,8 @@ export default class Dashboard extends Component {
         super(props);
         this.state = {
             selectedUser: data[0],
-            greaterThenAge: 0,
-            includedGender: ['Male', 'Female','Unknown'],
+            greaterThenWeek: 0,
+            includedActivity: ['running', 'cycling','lol'],
             activities: []
         }
         this.loadActivitiesFromServer = this.loadActivitiesFromServer.bind(this);
@@ -29,8 +29,8 @@ export default class Dashboard extends Component {
     loadActivitiesFromServer = async () => {
         let res = await garminService.getAll();
         this.setState({ activities: res });
-        console.log('activities');
-        console.log(this.state.activities);
+        // console.log('activities');
+        // console.log(this.state.activities);
       }
 
     changeSelectUser = value => {
@@ -39,28 +39,34 @@ export default class Dashboard extends Component {
         })
     };
 
-    changeGreaterThenAge = value => {
+    changegreaterThenWeek = value => {
         this.setState({
-            greaterThenAge: value
+            greaterThenWeek: value
         })
     };
 
-    changeIncludedGender = value => {
+    changeincludedActivity = value => {
         this.setState({
-            includedGender: value
+            includedActivity: value
         })
     };
 
     componentDidMount(){
         this.loadActivitiesFromServer();
+        
+
 
     }
 
 
     render() {
-        const {selectedUser, greaterThenAge, includedGender, activities} = this.state;
-        const filteredData = data.filter(user=>includedGender.indexOf(user.gender)!==-1)
-                                 .filter(user=>user.age>greaterThenAge);
+        const {selectedUser, greaterThenWeek, includedActivity, activities} = this.state;
+        const filteredData = activities.filter(a=>includedActivity.indexOf(a.activityType)!==-1)
+                                 .filter(a=>Number(a.week)>greaterThenWeek);
+        //let keys = [...new Set(activities.map(({activityType})=>activityType))];
+        //console.log('top keys');
+        //console.log(this.state);
+        
 
 
 
@@ -81,27 +87,28 @@ export default class Dashboard extends Component {
                             <View1 user={selectedUser}/>
                         </Content>
                         <Content style={{ height: 300 }}>
-                            <View2 data={activities}/>
+                            <View2 data={filteredData}/>
                         </Content>
                         <Content style={{ height: 400 }}>
                             <View3 
-                                changeGreaterThenAge={this.changeGreaterThenAge}
-                                changeIncludedGender={this.changeIncludedGender}
+                                changegreaterThenWeek={this.changegreaterThenWeek}
+                                changeincludedActivity={this.changeincludedActivity}
+                                activities={activities}
                             />
                         </Content>
                     </Sider>
                     <Layout>
                         <Content style={{ height: 300 }}>
-                            <View4 user={selectedUser}/>
+                            <View4 data={filteredData}/>
                         </Content>
                         <Layout style={{ height: 600 }}>
                             <Content>
                                 <View5 
-                                    data={activities} 
+                                    data={filteredData} 
                                 />
                             </Content>
                             <Sider width={300} style={{backgroundColor:'#eee'}}>
-                                <View6 data={activities}/>
+                                <View6 data={filteredData}/>
                                 {/* <div className="App">
                                   <ul className="list">
                                     {(activities && activities.length > 0) ? (

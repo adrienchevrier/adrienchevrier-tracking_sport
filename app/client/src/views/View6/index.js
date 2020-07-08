@@ -20,37 +20,37 @@ export default class View6 extends Component {
         const highlights = data.filter(a=>a.activityType== "cycling")
                             .filter(x=>x.duration_min==d3.max(data.filter(a=>a.activityType== "cycling"), function(d) { return d.duration_min; }))
                             .map(function (data) {
-                                console.log(data);
+                                // console.log(data);
                                 data['highlight'] = 'longest ride';
                                 return data;
                                 
                             }).concat(data.filter(a=>a.activityType== "running")
                             .filter(x=>x.duration_min==d3.max(data.filter(a=>a.activityType== "running"), function(d) { return d.duration_min; }))
                             .map(function (data) {
-                                console.log(data);
+                                // console.log(data);
                                 data['highlight'] = 'longest run';
                                 return data;
                                 
                             })).concat(data.filter(a=>a.activityType== "lap_swimming")
                             .filter(x=>x.duration_min==d3.max(data.filter(a=>a.activityType== "lap_swimming"), function(d) { return d.duration_min; }))
                             .map(function (data) {
-                                console.log(data);
+                                // console.log(data);
                                 data['highlight'] = 'longest swim';
                                 return data;
                                 
                             }));
         
-        console.log('highlights');
-        console.log(highlights);
+
 
         const renderProduct = activity => {
-            console.log(activity);
+            // console.log(activity);
             return (
               <li key={activity._id} className="list__item product">
                 <h3 className="product__name">{activity.activityName}</h3>
                 <h4 className="product__name">{activity.highlight}</h4>
                 <p className="product__description">average heartrate {activity.averageHR}</p>
                 <p className="product__description">duration {timeConvert(activity.duration_min)}</p>
+                <p className="product__description">distance {new Intl.NumberFormat().format(activity.distance)}m</p>
               </li>
             );
           };

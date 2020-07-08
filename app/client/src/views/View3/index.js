@@ -4,13 +4,15 @@ import './view3.css';
 
 const CheckboxGroup = Checkbox.Group;
 
-const plainOptions = ['Male', 'Female', 'Unknown'];
-const defaultCheckedList = ['Male', 'Female', 'Unknown'];
+let plainOptions = ['running', 'cycling','plain'];
+let defaultCheckedList = ['running', 'cycling', 'toto'];
 
 export default class View3 extends Component {
 
     constructor(props) {
         super(props);
+
+
         this.state = {
             checkedList: defaultCheckedList,
             indeterminate: true,
@@ -24,7 +26,7 @@ export default class View3 extends Component {
             indeterminate: !!checkedList.length && checkedList.length < plainOptions.length,
             checkAll: checkedList.length === plainOptions.length,
         });
-        this.props.changeIncludedGender(checkedList);
+        this.props.changeincludedActivity(checkedList);
     };
 
     onCheckAllChange = e => {
@@ -34,18 +36,23 @@ export default class View3 extends Component {
             indeterminate: false,
             checkAll: e.target.checked,
         });
-        this.props.changeIncludedGender(checkedList);
+        this.props.changeincludedActivity(checkedList);
     };
 
     onChangeSilder = value => {
-        this.props.changeGreaterThenAge(value);
+        this.props.changegreaterThenWeek(value);
     }
 
     render() {
+        let keys =[...new Set(this.props.activities.map(({activityType})=>activityType))];
+        plainOptions = [...new Set(this.props.activities.map(({activityType})=>activityType))];
+        defaultCheckedList= plainOptions;
+
+
         return (
             <div id='view3' className='pane'>
                 <div className='header'>Filter</div>
-                <h3>Gender</h3>
+                <h3>Activity</h3>
                 <div style={{ width: 275, margin: 5 }}>
                     <Checkbox
                         indeterminate={this.state.indeterminate}
@@ -64,7 +71,7 @@ export default class View3 extends Component {
                     />
                 </div>
                 <Divider />
-                <h3>Age</h3>
+                <h3>Week</h3>
                 <Slider defaultValue={0} onChange={this.onChangeSilder}/>
             </div>
         )

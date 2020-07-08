@@ -4,8 +4,9 @@ import _ from 'lodash';
 const draw = (props) => {
     let data = [];
     if (props.data !== null) {
-        data = _.cloneDeep(props.data.activities);
+        data = _.cloneDeep(props.data);
     }
+    
     d3.select('.vis-linechart > *').remove();
     let margin = { top: 20, right: 20, bottom: 30, left: 40 }
     const width = props.width - margin.left - margin.right;;
@@ -19,21 +20,21 @@ const draw = (props) => {
             "translate(" + margin.left + "," + margin.top + ")");
 
     data.forEach(function (d) {
-        d.date = d3.timeParse("%Y-%m-%d")(d.date);
-        d.count = +d.count;
+        d.week = Number(d.week);
     });
+    console.log(data);
     
     // Add X axis --> it is a date format
     let x = d3.scaleTime()
-        .domain(d3.extent(data, function (d) { return d.date; }))
+        .domain(d3.extent(data, function (d) { return d.week; }))
         .range([0, width]);
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x).tickSizeOuter(0));
 
     // Add Y axis
     var y = d3.scaleLinear()
-        .domain([0, d3.max(data, function (d) { return +d.count; })])
+        .domain([0, d3.max(data, function (d) { return +d.averageHR; })])
         .range([height, 0]);
     svg.append("g")
         .call(d3.axisLeft(y));
@@ -45,8 +46,8 @@ const draw = (props) => {
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
-            .x(function (d) { return x(d.date) })
-            .y(function (d) { return y(d.count) })
+            .x(function (d) { return x(d.week) })
+            .y(function (d) { return y(d.averageHR) })
         )
 }
 

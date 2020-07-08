@@ -13,7 +13,7 @@ import json
 import pymongo
 from datetime import datetime
 from configparser import ConfigParser
-
+pd.options.mode.chained_assignment = None
 
 """
 Setup Mongo Connection
@@ -108,6 +108,7 @@ myclient = pymongo.MongoClient(mongoclient)
 mydb = myclient[mongodb]
 mycol = mydb[mongocol]
 
+
 #Create pandas dataframe from data
 df_act = pd.DataFrame(activities)
 
@@ -115,7 +116,7 @@ df_act = pd.DataFrame(activities)
 clean dataframe
 """
 # select columns
-full_activities = df_act[['activityName','activityType','duration','averageHR','startTimeLocal']]
+full_activities = df_act[['activityId','activityName','activityType','distance','duration','averageHR','startTimeLocal']]
 # Get duration in minutes
 full_activities.loc[:, 'duration_min'] = full_activities['duration']/60
 # Get activity type
@@ -127,10 +128,17 @@ full_activities['startTimeLocal'] = full_activities['startTimeLocal'].apply(
 # Get week number
 full_activities['week'] = full_activities['startTimeLocal'].apply(lambda x : x.strftime("%V"))
 full_activities['date'] = full_activities['startTimeLocal'].apply(lambda x : x.date())
+full_activities['date'] =  pd.to_datetime(full_activities['date']).dt.strftime('%Y-%m-%d')
 
 """
 Insert data into mongodb
 """
 # Convert dataframe to json
 records = json.loads(full_activities.T.to_json()).values()
-mycol.insert_many(records)
+
+for doc in records:
+    mycol.replace_one(
+        {'activityId' : doc['activityId']},
+        doc,
+        upsert=True
+    )

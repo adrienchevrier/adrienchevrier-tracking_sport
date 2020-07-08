@@ -4,6 +4,7 @@ const {Schema} = mongoose;
 const productSchema = new Schema({
     activityName: String,
     activityType: String,
+    distance: Number,
     duration: Number,
     averageHR: Number,
     startTimeLocal: Number,

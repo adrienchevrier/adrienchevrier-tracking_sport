@@ -1,6 +1,8 @@
 import * as d3 from 'd3';
 import './style.css';
 
+
+
 const draw = (props) => {
     d3.select('.vis-barchart > *').remove();
     var data = props.data;
@@ -12,15 +14,16 @@ const draw = (props) => {
             .attr('height',height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    console.log('data raw');
-    console.log(props);
+
+    const t = d3.transition()
+            .duration(400);
+    // console.log('data raw');
+    // console.log(props);
     let keys = [...new Set(data.map(({activityType})=>activityType))];
     let weeks = data.map(function(d) { return Number(d.week); });
     weeks = weeks.sort(function(a,b) {
         return d3.ascending(a,b);
     });
-    console.log('weeks');
-    console.log(weeks);
     // format the data
     data.forEach(function(d) {
         d.duration_min = +d.duration_min;
@@ -66,15 +69,16 @@ const draw = (props) => {
 
     
 
-    console.log('data array');
-    console.log(data_array);
-    console.log('keys');
-    console.log(keys);
+    // console.log('data array');
+    // console.log(data_array)
+    var barWidth = width / weeks.length;
+
+    // console.log('barWidth');
+    // console.log(barWidth);
+
     var  stack = d3.stack()
     .keys(keys)
     let series = stack(data_array).map(d => (d.forEach(v => v.key = d.key), d));
-    console.log('data series');
-    console.log(series);
     // Scale the range of the data in the domains
     var x = d3.scaleBand()
       .domain(weeks)
@@ -85,14 +89,15 @@ const draw = (props) => {
 
 
     var z = d3.scaleOrdinal()
-    .range(d3.schemePuBuGn[5])
+    .range(d3.schemeRdBu[4])
     .unknown("#ccc")
     
     y.domain([0, d3.max(data_array, function(d) { return d.total; })+150]);
     z.domain(keys);
 
     // append the rectangles for the bar chart
-    svg.selectAll("g")
+    const rect = svg.selectAll("g")
+
         .data(series)
         .join("g")
             .attr("fill", function(d) { return z(d.key); })
@@ -100,19 +105,23 @@ const draw = (props) => {
         .data(function(d) {return d;})
         .enter().append("rect")
         .attr("class", "bar")
-        .attr("x", function(d) { return x(d.data.week); })
+        .transition(t)
+        .delay((d, i) => i * 20)
+        .attr("x", function(d,i) { return x(d.data.week); })
         .attr("width", x.bandwidth())
+        .transition(t)
         .attr("y", function(d) { return y(d[1]); })
-        .attr("height", function(d) { return y(d[0]) - y(d[1]); })
-        .on("mouseover", function() { tooltip.style("display", null); })
-        .on("mouseout", function() { tooltip.style("display", "none"); })
-        .on("mousemove", function(d) {
-        //   console.log(d);
-          var xPosition = d3.mouse(this)[0] - 5;
-          var yPosition = d3.mouse(this)[1] - 5;
-          tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
-          tooltip.select("text").text(d[1]-d[0]);
-        });
+        .transition(t)
+        .attr("height", function(d) { return y(d[0]) - y(d[1]); });
+        // .on("mouseover", function() { tooltip.style("display", null); })
+        // .on("mouseout", function() { tooltip.style("display", "none"); })
+        // .on("mousemove", function(d) {
+        // //   console.log(d);
+        //   var xPosition = d3.mouse(this)[0] - 5;
+        //   var yPosition = d3.mouse(this)[1] - 5;
+        //   tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
+        //   tooltip.select("text").text(d[1]-d[0]);
+        // });
     // add the x Axis
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
@@ -161,6 +170,8 @@ const draw = (props) => {
   .style("text-anchor", "middle")
   .attr("font-size", "12px")
   .attr("font-weight", "bold");
+
+
 }
 
 export default draw;

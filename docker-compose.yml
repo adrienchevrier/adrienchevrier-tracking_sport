@@ -17,7 +17,7 @@ services:
 
   react-dash:
     container_name: react-dash-app
-    image: ac/react-dash:dev
+    image: quanchisensei/react-dash:dev
     volumes:
       - './app:/app'
       - '/app/node_modules'
@@ -34,7 +34,7 @@ services:
 
 
   nb-python:
-    image: ac/python-garmin
+    image: quanchisensei/python-garmin
     container_name: python-app
     ports:
       - 8888:8888
@@ -46,7 +46,7 @@ services:
       - mongo-app
   
   load-activities:
-    image: ac/load-activities
+    image: quanchisensei/load-activities
     container_name: load-activities
     links: 
       - mongo-app
