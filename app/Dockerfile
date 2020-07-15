@@ -20,6 +20,7 @@ RUN npm install --save express body-parser mongoose
 RUN npm install --save-dev nodemon concurrently
 RUN npm install --save d3
 RUN npm install --save antd
+RUN npm install --save d3-delaunay
 
 # add app
 COPY . ./

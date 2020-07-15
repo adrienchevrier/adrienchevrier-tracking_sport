@@ -1,3 +1,4 @@
+import logging
 
 ### import libraries
 from garminconnect import (
@@ -14,6 +15,7 @@ import pymongo
 from datetime import datetime
 from configparser import ConfigParser
 pd.options.mode.chained_assignment = None
+today = date.today()
 
 """
 Setup Mongo Connection
@@ -21,6 +23,17 @@ Setup Mongo Connection
 mongoclient = "mongodb://mongo-app:27017/"
 mongodb = "activities"
 mongocol = "general_activities"
+mongounit = "metadata"
+unit_id = "metadata"
+
+"""
+Connect to Mongo DB
+"""
+myclient = pymongo.MongoClient(mongoclient)
+mydb = myclient[mongodb]
+mycol = mydb[mongocol]
+mycolunit = mydb[mongounit]
+
 
 
 """
@@ -73,7 +86,7 @@ except Exception:  # pylint: disable=broad-except
 Get full name from profile
 """
 try:
-    print(client.get_full_name())
+    logging.info('Garmin user : '+client.get_full_name())
 except (
     GarminConnectConnectionError,
     GarminConnectAuthenticationError,
@@ -101,12 +114,6 @@ except Exception:  # pylint: disable=broad-except
     print("Unknown error occured during Garmin Connect Client get activities")
     quit()
 
-"""
-Connect to Mongo DB
-"""
-myclient = pymongo.MongoClient(mongoclient)
-mydb = myclient[mongodb]
-mycol = mydb[mongocol]
 
 
 #Create pandas dataframe from data
@@ -140,5 +147,55 @@ for doc in records:
     mycol.replace_one(
         {'activityId' : doc['activityId']},
         doc,
+        upsert=True
+    )
+
+"""
+Get unit system from profile
+"""
+try:
+    unitsystem = client.get_unit_system()
+except (
+    GarminConnectConnectionError,
+    GarminConnectAuthenticationError,
+    GarminConnectTooManyRequestsError,
+) as err:
+    print("Error occurred during Garmin Connect Client get unit system: %s" % err)
+    quit()
+except Exception:  # pylint: disable=broad-except
+    print("Unknown error occurred during Garmin Connect Client get unit system")
+    quit()
+
+
+"""
+    Get stats and body composition data
+"""
+try:
+    stats = client.get_stats_and_body(today.isoformat())
+except (
+    GarminConnectConnectionError,
+    GarminConnectAuthenticationError,
+    GarminConnectTooManyRequestsError,
+) as err:
+    print("Error occurred during Garmin Connect Client get stats and body composition: %s" % err)
+    quit()
+except Exception:  # pylint: disable=broad-except
+    print("Unknown error occurred during Garmin Connect Client get stats and body composition")
+    quit()
+
+# user stats
+stats_output = {}
+stats_output['_id'] = 'userProfile'
+stats_output['unitsystem'] = unitsystem
+stats_output["calendarDate"] = stats["calendarDate"]
+stats_output["restingHeartRate"] = stats["restingHeartRate"]
+stats_output['weight'] = stats['weight']
+
+# Insert stats
+mycolunit.replace_one(
+        {'_id' : 'userProfile'},
+        
+        
+        stats_output,
         upsert=True
     )

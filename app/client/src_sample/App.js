@@ -2,6 +2,7 @@ import React, { useState, useEffect, Component } from "react";
 import { Container, Nav } from "./styled-components";
 // SERVICES
 import garminService from '../src/services/garminService';
+import metadataService from '../src/services/metadataService';
 // import "bootstrap/dist/css/bootstrap.css";
 import * as d3 from "d3";
 import { json } from "d3";

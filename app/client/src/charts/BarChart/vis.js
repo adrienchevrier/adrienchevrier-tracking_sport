@@ -9,6 +9,7 @@ const draw = (props) => {
     const margin = {top: 20, right: 20, bottom: 30, left: 40};
     const width = props.width - margin.left - margin.right;
     const height = props.height - margin.top - margin.bottom;
+    const yValue = props.yValue;
     let svg = d3.select('.vis-barchart').append('svg')
             .attr('width',width + margin.left + margin.right)
             .attr('height',height + margin.top + margin.bottom)
@@ -26,7 +27,7 @@ const draw = (props) => {
     });
     // format the data
     data.forEach(function(d) {
-        d.duration_min = +d.duration_min;
+        d[yValue] = +d[yValue];
         keys.forEach(e => {
             if (typeof e == "undefined") {
                 d[e] = 0;
@@ -37,7 +38,7 @@ const draw = (props) => {
     let data_clean = d3.nest()
         .key(function(d) { return d.week;})
         .key(function(d) { return d.activityType;})
-        .rollup(function(v) { return d3.sum(v, function(d) {return d.duration_min})})
+        .rollup(function(v) { return d3.sum(v, function(d) {return d[yValue]})})
         .object(data)
     //     .map(function (obj) {
     //         for (const activity in keys){
@@ -148,12 +149,23 @@ const draw = (props) => {
       rect.on("mousemove", function(d) {
           var xPosition = d3.mouse(this)[0] - 15;
           var yPosition = d3.mouse(this)[1] - 65;
-          tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")")
-                      .call(popover, `${d.key}
+          if( yValue === "duration_min"){
+            tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")")
+            .call(popover, `${d.key}
             Hours spent ${timeConvert(d[1]-d[0])}
             Total hours ${timeConvert(d.data.total)}
             Week ${d.data.week}
             `);
+          }
+          else{
+            tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")")
+            .call(popover, `${d.key}
+            distance covered ${new Intl.NumberFormat().format(d[1]-d[0])} m
+            Total distance ${new Intl.NumberFormat().format(d.data.total)} m
+            Week ${d.data.week}
+            `);
+          }
+          
 
           
         })

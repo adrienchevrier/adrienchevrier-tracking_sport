@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 
 // IMPORT MODELS
 require('./models/Garmin');
+require('./models/Metadata');
+
 
 const app = express();
 
@@ -14,6 +16,7 @@ app.use(bodyParser.json());
 
 //IMPORT ROUTES
 require('./routes/garminRoutes')(app);
+require('./routes/metadataRoutes')(app);
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));

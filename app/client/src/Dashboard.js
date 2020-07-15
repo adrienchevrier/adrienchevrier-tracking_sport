@@ -2,6 +2,7 @@ import React, {  Component } from 'react';
 import data from './data';
 import { Layout } from 'antd';
 import garminService from './services/garminService';
+import metadataService from './services/metadataService';
 import View1 from './views/View1';
 import View2 from './views/View2';
 import View3 from './views/View3';
@@ -20,7 +21,8 @@ export default class Dashboard extends Component {
             selectedUser: data[0],
             greaterThenWeek: 0,
             includedActivity: ['running', 'cycling','lol'],
-            activities: []
+            activities: [],
+            metadata: []
         }
         this.loadActivitiesFromServer = this.loadActivitiesFromServer.bind(this);
     }
@@ -29,8 +31,8 @@ export default class Dashboard extends Component {
     loadActivitiesFromServer = async () => {
         let res = await garminService.getAll();
         this.setState({ activities: res });
-        // console.log('activities');
-        // console.log(this.state.activities);
+        let meta = await metadataService.getAll();
+        this.setState({ metadata: meta });
       }
 
     changeSelectUser = value => {
@@ -60,12 +62,12 @@ export default class Dashboard extends Component {
 
 
     render() {
-        const {selectedUser, greaterThenWeek, includedActivity, activities} = this.state;
+        const {selectedUser, greaterThenWeek, includedActivity, activities, metadata} = this.state;
         const filteredData = activities.filter(a=>includedActivity.indexOf(a.activityType)!==-1)
                                  .filter(a=>Number(a.week)>greaterThenWeek);
         //let keys = [...new Set(activities.map(({activityType})=>activityType))];
-        //console.log('top keys');
-        //console.log(this.state);
+        console.log('top metadata');
+        console.log(metadata);
         
 
 
@@ -101,14 +103,14 @@ export default class Dashboard extends Component {
                         <Content style={{ height: 300 }}>
                             <View4 data={filteredData}/>
                         </Content>
-                        <Layout style={{ height: 600 }}>
+                        <Layout style={{ height: 700 }}>
                             <Content>
                                 <View5 
                                     data={filteredData} 
                                 />
                             </Content>
                             <Sider width={300} style={{backgroundColor:'#eee'}}>
-                                <View6 data={filteredData}/>
+                                <View6 data={filteredData} metadata={metadata}/>
                                 {/* <div className="App">
                                   <ul className="list">
                                     {(activities && activities.length > 0) ? (
@@ -126,8 +128,9 @@ export default class Dashboard extends Component {
                 <Layout>
                     <Footer style={{ height: 20 }}>
                         <div style={{marginTop: -10}}>
-                            Source Code <a href='https://github.com/sdq/react-d3-dashboard'>https://github.com/sdq/react-d3-dashboard</a>;
-                            Author <a href='https://sdq.ai'>sdq</a>;
+                            Source Code <a href='https://github.com/adrienchevrier/adrienchevrier-tracking_sport.git'>
+                                https://github.com/adrienchevrier/adrienchevrier-tracking_sport</a>;
+                        Tracking Sport App
                         </div>
                     </Footer>
                 </Layout>
