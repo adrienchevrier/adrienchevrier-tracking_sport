@@ -14,6 +14,8 @@ import json
 import pymongo
 from datetime import datetime
 from configparser import ConfigParser
+import logging
+logging.basicConfig(level=logging.DEBUG)
 pd.options.mode.chained_assignment = None
 today = date.today()
 
@@ -40,12 +42,13 @@ mycolunit = mydb[mongounit]
 Read config.ini file
 """
 config_object = ConfigParser()
-config_object.read("config.ini")
+config_object.read("/python/config.ini")
 
 """
 Get the password
 """
 userinfo = config_object["USERINFO"]
+logging.info(userinfo["email"])
 
 
 """

@@ -48,6 +48,8 @@ services:
   load-activities:
     image: quanchisensei/load-activities
     container_name: load-activities
+    volumes:
+      - ./python:/python
     links: 
       - mongo-app
     depends_on:

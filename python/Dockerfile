@@ -5,6 +5,6 @@ WORKDIR /usr/src/app
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY . /python
 
-CMD [ "python", "./load_activities.py" ]
+CMD [ "python", "/python/load_activities.py"]
