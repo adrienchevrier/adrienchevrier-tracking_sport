@@ -63,4 +63,9 @@ When launched, this container downloads activities from the user's account, and 
 * Location : <YOUR APP FOLDER>/app
 * Image name : quanchisensei/react-dash:dev
 * Container name : react-dash-app
+  
+  ##### mongo-app
+* Location : -
+* Image name : mongo:latest
+* Container name : mongo-app
 
