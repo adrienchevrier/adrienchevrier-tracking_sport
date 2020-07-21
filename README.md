@@ -3,4 +3,4 @@ This projects intends to track the user's sport activity through weeks based on 
 
 # Installation
 Download the project by clicking on Code => Download ZIP File :
-![Alt text](https://github.com/adrienchevrier/adrienchevrier-tracking_sport/blob/master/download.png?raw=true)
+![Alt text](https://github.com/adrienchevrier/adrienchevrier-tracking_sport/blob/master/download.PNG?raw=true)
