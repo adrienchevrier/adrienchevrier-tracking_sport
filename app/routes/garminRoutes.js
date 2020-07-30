@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 const Garmin = mongoose.model('general_activities');
 
+
 module.exports = (app) => {
+
+
+
 
   app.get(`/api/garmin`, async (req, res) => {
     let activities = await Garmin.find();

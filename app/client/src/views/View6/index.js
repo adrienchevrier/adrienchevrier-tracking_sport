@@ -17,6 +17,15 @@ export default class View6 extends Component {
 
 
         const {data} = this.props;
+        console.log(data);
+        var user = this.props.user;
+        var unitsystem = user.map(({unitsystem})=>unitsystem)[0];
+        var disttype = '';
+        if (unitsystem === 'metric') {
+          disttype = 'm';
+      }else {
+        disttype = 'mi';
+      }
         const highlights = data.filter(a=>a.activityType== "cycling")
                             .filter(x=>x.duration_min==d3.max(data.filter(a=>a.activityType== "cycling"), function(d) { return d.duration_min; }))
                             .map(function (data) {
@@ -47,10 +56,11 @@ export default class View6 extends Component {
             return (
               <li key={activity._id} className="list__item product" style={{margin: 10 }}>
                 <h3 className="product__name" style={{"fontWeight":"bold"}}>{activity.activityName}</h3>
+                <h4 className="product__name" style={{"fontWeight":"bold"}}>{new Date(activity.date).toDateString()}</h4>
                 <h4 className="product__name" style={{"fontSize":16}}>{activity.highlight}</h4>
                 <p className="product__description">average heartrate {activity.averageHR}</p>
                 <p className="product__description">duration {timeConvert(activity.duration_min)}</p>
-                <p className="product__description">distance {new Intl.NumberFormat().format(activity.distance)}m</p>
+            <p className="product__description">distance {new Intl.NumberFormat().format(activity.distance)} {disttype}</p>
               </li>
             );
           };

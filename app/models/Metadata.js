@@ -1,14 +1,19 @@
 const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
-const productSchema = new Schema({
-    _id: String,
-    unitsystem: String,
-calendarDate: String,
-restingHeartRate: Number,
-weight: Number
+const metaSchema = new Schema({
+    //_id: {type: String, required: false},
+    name: String,
+    unitsystem: {type: String, required: false},
+    calendarDate: {type: String, required: false},
+    restingHeartRate: Number,
+    weight: {type: Number, required: false}
+    
 
 
 })
 
-mongoose.model('metadata', productSchema);
+const metadata = mongoose.model('metadata', metaSchema,'metadata');
+
+exports.metadata = metadata;
+exports.metaSchema = metaSchema;

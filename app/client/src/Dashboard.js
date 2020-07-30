@@ -65,10 +65,7 @@ export default class Dashboard extends Component {
         const {selectedUser, greaterThenWeek, includedActivity, activities, metadata} = this.state;
         const filteredData = activities.filter(a=>includedActivity.indexOf(a.activityType)!==-1)
                                  .filter(a=>Number(a.week)>greaterThenWeek);
-        //let keys = [...new Set(activities.map(({activityType})=>activityType))];
-        console.log('top metadata');
-        console.log(metadata);
-        
+
 
 
 
@@ -86,7 +83,7 @@ export default class Dashboard extends Component {
                 <Layout style={{ height: 920 }}>
                     <Sider width={300} style={{backgroundColor:'#eee'}}>
                         <Content style={{ height: 200 }}>
-                            <View1 user={selectedUser}/>
+                            <View1 user={metadata}/>
                         </Content>
                         <Content style={{ height: 300 }}>
                             <View2 data={filteredData}/>
@@ -110,7 +107,7 @@ export default class Dashboard extends Component {
                                 />
                             </Content>
                             <Sider width={300} style={{backgroundColor:'#eee'}}>
-                                <View6 data={filteredData} metadata={metadata}/>
+                                <View6 data={filteredData} user={metadata}/>
                                 {/* <div className="App">
                                   <ul className="list">
                                     {(activities && activities.length > 0) ? (

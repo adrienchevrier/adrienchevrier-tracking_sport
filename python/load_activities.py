@@ -89,7 +89,8 @@ except Exception:  # pylint: disable=broad-except
 Get full name from profile
 """
 try:
-    logging.info('Garmin user : '+client.get_full_name())
+    fullname = client.get_full_name()
+    logging.info('Garmin user : '+ fullname)
 except (
     GarminConnectConnectionError,
     GarminConnectAuthenticationError,
@@ -189,10 +190,12 @@ except Exception:  # pylint: disable=broad-except
 # user stats
 stats_output = {}
 stats_output['_id'] = 'userProfile'
+stats_output['name'] = fullname
 stats_output['unitsystem'] = unitsystem
 stats_output["calendarDate"] = stats["calendarDate"]
 stats_output["restingHeartRate"] = stats["restingHeartRate"]
 stats_output['weight'] = stats['weight']
+
 
 # Insert stats
 mycolunit.replace_one(

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
-const productSchema = new Schema({
+const garminSchema = new Schema({
     activityName: String,
     activityType: String,
     distance: Number,
@@ -15,4 +15,4 @@ const productSchema = new Schema({
 
 })
 
-mongoose.model('general_activities', productSchema);
+mongoose.model('general_activities', garminSchema);
