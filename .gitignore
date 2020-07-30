@@ -2,3 +2,4 @@ node_modules
 config.ini
 react-d3-dashboard-master
 python/.ipynb_checkpoints
+python/config.ini
