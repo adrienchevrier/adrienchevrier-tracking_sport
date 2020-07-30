@@ -42,7 +42,7 @@ mycolunit = mydb[mongounit]
 Read config.ini file
 """
 config_object = ConfigParser()
-config_object.read("/python/config_dev.ini")
+config_object.read("/python/config.ini")
 
 """
 Get the password
